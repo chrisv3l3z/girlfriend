@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paisaje Mágico</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Arial", sans-serif;
+        height: 100vh;
+        transition: background 15s linear;
+        background: linear-gradient(to bottom, #87ceeb, #e0f7fa);
+        position: relative;
+      }
+
+      /* Cielo y sol/luna */
+      .sky {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .sun-moon {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #fdb813;
+        box-shadow: 0 0 50px #fdb813;
+        top: 10%;
+        left: 15%;
+        transition: all 15s linear;
+        z-index: 1;
+      }
+
+      .night .sun-moon {
+        background: #e6e6fa;
+        box-shadow: 0 0 30px #ffffff;
+        top: 10%;
+        left: 85%;
+      }
+
+      .night {
+        background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      }
+
+      /* Nubes */
+      .cloud {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        z-index: 2;
+      }
+
+      /* Montañas */
+      .mountain {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(to bottom, #2e8b57, #228b22);
+        clip-path: polygon(
+          0% 100%,
+          100% 100%,
+          100% 30%,
+          75% 50%,
+          50% 30%,
+          25% 50%,
+          0% 30%
+        );
+        z-index: 3;
+      }
+
+      /* Hojas que caen */
+      .leaf {
+        position: absolute;
+        color: #8b4513;
+        font-size: 20px;
+        z-index: 4;
+        animation: falling linear infinite;
+      }
+
+      @keyframes falling {
+        0% {
+          transform: translate(0, -10px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translate(100px, 100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Rosa */
+      .rose-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .rose-container:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+
+      .rose {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle at 40% 40%, #ff1493, #b22222);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        box-shadow: -5px -5px 15px rgba(255, 20, 147, 0.6),
+          5px 5px 15px rgba(178, 34, 34, 0.6);
+        position: relative;
+        animation: sway 3s ease-in-out infinite alternate;
+      }
+
+      .rose:before {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 40px;
+        background: #008000;
+        bottom: -40px;
+        left: 30px;
+        border-radius: 0 0 10px 10px;
+      }
+
+      @keyframes sway {
+        0% {
+          transform: rotate(-5deg);
+        }
+        100% {
+          transform: rotate(5deg);
+        }
+      }
+
+      /* Pétalos con mensajes */
+      .petal {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+        z-index: 10;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .petal img {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+      }
+
+      .close-petal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ff1493;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sky">
+      <div class="sun-moon"></div>
+      <!-- Nubes -->
+      <div
+        class="cloud"
+        style="
+          width: 100px;
+          height: 60px;
+          top: 20%;
+          left: 10%;
+          animation: moveCloud 30s linear infinite;
+        "
+      ></div>
+      <div
+        class="cloud"
+        style="
+          width: 150px;
+          height: 80px;
+          top: 15%;
+          left: 40%;
+          animation: moveCloud 40s linear infinite 5s;
+        "
+      ></div>
+      <div
+        class="cloud"
+        style="
+          width: 120px;
+          height: 70px;
+          top: 25%;
+          left: 70%;
+          animation: moveCloud 35s linear infinite 10s;
+        "
+      ></div>
+    </div>
+
+    <div class="mountain"></div>
+
+    <!-- Hojas que caen -->
+    <div class="leaf" style="left: 10%; animation-duration: 10s">🍂</div>
+    <div class="leaf" style="left: 30%; animation-duration: 15s">🍁</div>
+    <div class="leaf" style="left: 50%; animation-duration: 12s">🍂</div>
+    <div class="leaf" style="left: 70%; animation-duration: 18s">🍁</div>
+    <div class="leaf" style="left: 90%; animation-duration: 14s">🍂</div>
+
+    <!-- Rosa -->
+    <div class="rose-container" id="rose">
+      <div class="rose"></div>
+    </div>
+
+    <!-- Pétalos con mensajes -->
+    <div class="petal" id="petal1">
+      <button class="close-petal">×</button>
+      <img src="./img/nov1.jpeg" alt="Imagen 1" />
+      <h3>Mensaje 1</h3>
+      <p>Este es el primer mensaje especial para ti.</p>
+    </div>
+
+    <div class="petal" id="petal2">
+      <button class="close-petal">×</button>
+      <img src="./img/nov2.jpeg" alt="Imagen 2" />
+      <h3>Mensaje 2</h3>
+      <p>El segundo mensaje lleno de cariño.</p>
+    </div>
+
+    <div class="petal" id="petal3">
+      <button class="close-petal">×</button>
+      <img src="./img/nov3.jpeg" alt="Imagen 3" />
+      <h3>Mensaje 3</h3>
+      <p>Tercer mensaje con buenos deseos.</p>
+    </div>
+
+    <div class="petal" id="petal4">
+      <button class="close-petal">×</button>
+      <img src="./img/nov4.jpeg" alt="Imagen 4" />
+      <h3>Mensaje 4</h3>
+      <p>Cuarto mensaje para alegrar tu día.</p>
+    </div>
+
+    <div class="petal" id="petal5">
+      <button class="close-petal">×</button>
+      <img src="./img/nov5.jpeg" alt="Imagen 5" />
+      <h3>Mensaje 5</h3>
+      <p>Último mensaje pero no menos importante.</p>
+    </div>
+
+    <script>
+      // Animación día/noche
+      setTimeout(() => {
+        document.body.classList.add("night");
+      }, 15000);
+
+      // Crear más nubes dinámicamente
+      for (let i = 0; i < 5; i++) {
+        const cloud = document.createElement("div");
+        cloud.className = "cloud";
+        cloud.style.width = `${Math.random() * 50 + 80}px`;
+        cloud.style.height = `${Math.random() * 30 + 50}px`;
+        cloud.style.top = `${Math.random() * 30}%`;
+        cloud.style.left = `${Math.random() * 100}%`;
+        cloud.style.animation = `moveCloud ${
+          Math.random() * 20 + 20
+        }s linear infinite ${Math.random() * 10}s`;
+        document.querySelector(".sky").appendChild(cloud);
+      }
+
+      // Definir animación de nubes
+      const style = document.createElement("style");
+      style.innerHTML = `
+            @keyframes moveCloud {
+                from { transform: translateX(-150px); }
+                to { transform: translateX(calc(100vw + 150px)); }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Mostrar pétalos al hacer clic en la rosa
+      const rose = document.getElementById("rose");
+      const petals = document.querySelectorAll(".petal");
+      let currentPetal = 0;
+
+      rose.addEventListener("click", () => {
+        petals.forEach((petal) => (petal.style.display = "none"));
+
+        petals[currentPetal].style.display = "flex";
+        petals[currentPetal].style.left = `${Math.random() * 60 + 20}%`;
+        petals[currentPetal].style.top = `${Math.random() * 60 + 20}%`;
+
+        currentPetal = (currentPetal + 1) % petals.length;
+      });
+
+      // Cerrar pétalos al hacer clic en el botón
+      document.querySelectorAll(".close-petal").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.stopPropagation();
+          this.parentElement.style.display = "none";
+        });
+      });
+    </script>
+  </body>
+</html>
